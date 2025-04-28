@@ -13,6 +13,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import SavedMealPlans from "@/components/meals/SavedMealPlans";
 import GroceryList from "@/components/meals/GroceryList";
 import { searchFood, getNutritionInfo } from "@/utils/nutritionix";
+import { useMealPlan } from '@/hooks/useMealPlan';
 
 const mockMealPlan = {
   breakfast: {
@@ -165,6 +166,8 @@ const MealPlanCreation = () => {
   const [savedMealPlans, setSavedMealPlans] = useState([]);
   const [groceryItems, setGroceryItems] = useState([]);
 
+  const { saveMealPlan, createGroceryList, isLoading } = useMealPlan();
+
   const handleGenerateMealPlan = async () => {
     setIsGenerating(true);
     
@@ -195,6 +198,31 @@ const MealPlanCreation = () => {
         item.id === id ? { ...item, checked: !item.checked } : item
       )
     );
+  };
+
+  const handleSaveMealPlan = async () => {
+    const mealPlanData = {
+      name: `Meal Plan ${new Date().toLocaleDateString()}`,
+      caloriePreference,
+      meals: {
+        breakfast: includeBreakfast ? mockMealPlan.breakfast : null,
+        lunch: includeLunch ? mockMealPlan.lunch : null,
+        dinner: includeDinner ? mockMealPlan.dinner : null,
+        snacks: includeSnacks ? mockMealPlan.snacks : null,
+      },
+    };
+
+    const savedPlan = await saveMealPlan(mealPlanData);
+    if (savedPlan) {
+      setActiveTab("saved-plans");
+    }
+  };
+
+  const handleCreateGroceryList = async () => {
+    toast({
+      title: "Info",
+      description: "Please save your meal plan first",
+    });
   };
 
   return (

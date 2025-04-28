@@ -4,14 +4,11 @@ const NUTRITIONIX_APP_KEY = 'your-api-key';
 
 export const searchFood = async (query: string) => {
   try {
-    const response = await fetch('https://trackapi.nutritionix.com/v2/search/instant', {
+    const response = await fetch(`https://trackapi.nutritionix.com/v2/search/instant?query=${encodeURIComponent(query)}`, {
       method: 'GET',
       headers: {
         'x-app-id': NUTRITIONIX_APP_ID,
         'x-app-key': NUTRITIONIX_APP_KEY,
-      },
-      params: {
-        query,
       },
     });
 

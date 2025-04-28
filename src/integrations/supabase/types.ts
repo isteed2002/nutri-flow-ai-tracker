@@ -9,7 +9,194 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      [_ in never]: never
+      grocery_list_items: {
+        Row: {
+          checked: boolean | null
+          created_at: string | null
+          grocery_list_id: string
+          id: string
+          name: string
+          quantity: number
+          unit: string
+          updated_at: string | null
+        }
+        Insert: {
+          checked?: boolean | null
+          created_at?: string | null
+          grocery_list_id: string
+          id?: string
+          name: string
+          quantity: number
+          unit: string
+          updated_at?: string | null
+        }
+        Update: {
+          checked?: boolean | null
+          created_at?: string | null
+          grocery_list_id?: string
+          id?: string
+          name?: string
+          quantity?: number
+          unit?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "grocery_list_items_grocery_list_id_fkey"
+            columns: ["grocery_list_id"]
+            isOneToOne: false
+            referencedRelation: "grocery_lists"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      grocery_lists: {
+        Row: {
+          created_at: string | null
+          id: string
+          meal_plan_id: string | null
+          name: string
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          meal_plan_id?: string | null
+          name: string
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          meal_plan_id?: string | null
+          name?: string
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "grocery_lists_meal_plan_id_fkey"
+            columns: ["meal_plan_id"]
+            isOneToOne: false
+            referencedRelation: "meal_plans"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ingredients: {
+        Row: {
+          created_at: string | null
+          id: string
+          meal_id: string
+          name: string
+          nutritionix_id: string | null
+          quantity: number
+          unit: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          meal_id: string
+          name: string
+          nutritionix_id?: string | null
+          quantity: number
+          unit: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          meal_id?: string
+          name?: string
+          nutritionix_id?: string | null
+          quantity?: number
+          unit?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ingredients_meal_id_fkey"
+            columns: ["meal_id"]
+            isOneToOne: false
+            referencedRelation: "meals"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      meal_plans: {
+        Row: {
+          calories_target: number
+          created_at: string | null
+          id: string
+          name: string
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          calories_target: number
+          created_at?: string | null
+          id?: string
+          name: string
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          calories_target?: number
+          created_at?: string | null
+          id?: string
+          name?: string
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      meals: {
+        Row: {
+          calories: number
+          carbs: number
+          created_at: string | null
+          fat: number
+          id: string
+          instructions: string | null
+          meal_plan_id: string
+          name: string
+          protein: number
+          type: Database["public"]["Enums"]["meal_type"]
+        }
+        Insert: {
+          calories: number
+          carbs: number
+          created_at?: string | null
+          fat: number
+          id?: string
+          instructions?: string | null
+          meal_plan_id: string
+          name: string
+          protein: number
+          type: Database["public"]["Enums"]["meal_type"]
+        }
+        Update: {
+          calories?: number
+          carbs?: number
+          created_at?: string | null
+          fat?: number
+          id?: string
+          instructions?: string | null
+          meal_plan_id?: string
+          name?: string
+          protein?: number
+          type?: Database["public"]["Enums"]["meal_type"]
+        }
+        Relationships: [
+          {
+            foreignKeyName: "meals_meal_plan_id_fkey"
+            columns: ["meal_plan_id"]
+            isOneToOne: false
+            referencedRelation: "meal_plans"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
@@ -18,7 +205,7 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      meal_type: "breakfast" | "lunch" | "dinner" | "snack"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -133,6 +320,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      meal_type: ["breakfast", "lunch", "dinner", "snack"],
+    },
   },
 } as const
