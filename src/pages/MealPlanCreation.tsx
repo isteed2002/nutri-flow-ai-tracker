@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import Layout from "@/components/layout/Layout";
 import { useUser } from "@/contexts/UserContext";
@@ -11,8 +10,10 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import SavedMealPlans from "@/components/meals/SavedMealPlans";
+import GroceryList from "@/components/meals/GroceryList";
+import { searchFood, getNutritionInfo } from "@/utils/nutritionix";
 
-// Sample meal plan (simulating AI generation)
 const mockMealPlan = {
   breakfast: {
     name: "Greek Yogurt Parfait",
@@ -161,36 +162,39 @@ const MealPlanCreation = () => {
   const [includeDinner, setIncludeDinner] = useState(true);
   const [includeSnacks, setIncludeSnacks] = useState(true);
 
-  const handleGenerateMealPlan = () => {
+  const [savedMealPlans, setSavedMealPlans] = useState([]);
+  const [groceryItems, setGroceryItems] = useState([]);
+
+  const handleGenerateMealPlan = async () => {
     setIsGenerating(true);
     
-    // Simulate API call to generate meal plan
-    setTimeout(() => {
-      setIsGenerating(false);
-      setShowMealPlan(true);
-      setActiveTab("meal-plan");
-      
+    try {
+      setTimeout(() => {
+        setIsGenerating(false);
+        setShowMealPlan(true);
+        setActiveTab("meal-plan");
+        
+        toast({
+          title: "Meal Plan Generated",
+          description: "Your personalized meal plan has been created.",
+        });
+      }, 2000);
+    } catch (error) {
       toast({
-        title: "Meal Plan Generated",
-        description: "Your personalized meal plan has been created.",
+        title: "Error",
+        description: "Failed to generate meal plan. Please try again.",
+        variant: "destructive",
       });
-    }, 2000);
+      setIsGenerating(false);
+    }
   };
 
-  const handleSaveMealPlan = () => {
-    // In a real app, this would save the meal plan to the user's account
-    toast({
-      title: "Meal Plan Saved",
-      description: "Your meal plan has been saved to your profile.",
-    });
-  };
-
-  const handleCreateGroceryList = () => {
-    // In a real app, this would generate a grocery list from the meal plan
-    toast({
-      title: "Grocery List Created",
-      description: "Your grocery list has been created from the meal plan.",
-    });
+  const handleToggleGroceryItem = (id: string) => {
+    setGroceryItems(items =>
+      items.map(item =>
+        item.id === id ? { ...item, checked: !item.checked } : item
+      )
+    );
   };
 
   return (
@@ -204,12 +208,14 @@ const MealPlanCreation = () => {
         </div>
 
         <Tabs value={activeTab} onValueChange={setActiveTab}>
-          <TabsList className="grid w-full grid-cols-2">
+          <TabsList className="grid w-full grid-cols-4">
             <TabsTrigger value="preferences">Preferences</TabsTrigger>
             <TabsTrigger value="meal-plan" disabled={!showMealPlan}>Meal Plan</TabsTrigger>
+            <TabsTrigger value="saved-plans">Saved Plans</TabsTrigger>
+            <TabsTrigger value="grocery-list">Grocery List</TabsTrigger>
           </TabsList>
           
-          <TabsContent value="preferences" className="animate-fade-up">
+          <TabsContent value="preferences">
             <Card>
               <CardHeader>
                 <CardTitle>Meal Plan Preferences</CardTitle>
@@ -340,7 +346,7 @@ const MealPlanCreation = () => {
             </Card>
           </TabsContent>
           
-          <TabsContent value="meal-plan" className="animate-fade-up">
+          <TabsContent value="meal-plan">
             <div className="grid gap-6">
               <div className="flex flex-wrap gap-4 mb-4">
                 <Button 
@@ -368,7 +374,6 @@ const MealPlanCreation = () => {
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {/* Daily Summary */}
                 <Card>
                   <CardHeader>
                     <CardTitle>Daily Nutrition Summary</CardTitle>
@@ -406,7 +411,6 @@ const MealPlanCreation = () => {
                   </CardContent>
                 </Card>
                 
-                {/* Meal Plan Details */}
                 {includeBreakfast && (
                   <MealCard meal={mockMealPlan.breakfast} title="Breakfast" />
                 )}
@@ -424,6 +428,23 @@ const MealPlanCreation = () => {
                 ))}
               </div>
             </div>
+          </TabsContent>
+
+          <TabsContent value="saved-plans">
+            <SavedMealPlans
+              savedMealPlans={savedMealPlans}
+              onSelectMealPlan={(mealPlan) => {
+                setShowMealPlan(true);
+                setActiveTab("meal-plan");
+              }}
+            />
+          </TabsContent>
+
+          <TabsContent value="grocery-list">
+            <GroceryList
+              items={groceryItems}
+              onToggleItem={handleToggleGroceryItem}
+            />
           </TabsContent>
         </Tabs>
       </div>
