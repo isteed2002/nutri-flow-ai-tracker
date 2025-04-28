@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -61,6 +62,16 @@ export default {
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
+				},
+				// Custom colors for NutriFlow
+				nutriflow: {
+					primary: '#4CAF50',    // Green for primary actions
+					secondary: '#81C784',  // Lighter green for secondary elements
+					accent: '#2196F3',     // Blue for accents
+					light: '#E8F5E9',      // Very light green for backgrounds
+					dark: '#1B5E20',       // Dark green for text
+					warning: '#FFC107',    // Amber for warnings
+					error: '#F44336',      // Red for errors
 				}
 			},
 			borderRadius: {
@@ -84,11 +95,21 @@ export default {
 					to: {
 						height: '0'
 					}
+				},
+				'fade-in': {
+					'0%': { opacity: '0' },
+					'100%': { opacity: '1' }
+				},
+				'fade-up': {
+					'0%': { opacity: '0', transform: 'translateY(10px)' },
+					'100%': { opacity: '1', transform: 'translateY(0)' }
 				}
 			},
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
-				'accordion-up': 'accordion-up 0.2s ease-out'
+				'accordion-up': 'accordion-up 0.2s ease-out',
+				'fade-in': 'fade-in 0.3s ease-out',
+				'fade-up': 'fade-up 0.5s ease-out'
 			}
 		}
 	},
