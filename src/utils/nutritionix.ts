@@ -1,6 +1,7 @@
 
-const NUTRITIONIX_APP_ID = 'your-app-id';
-const NUTRITIONIX_APP_KEY = 'your-api-key';
+// Use the free Nutritionix API
+const NUTRITIONIX_APP_ID = '3b2f3e47';
+const NUTRITIONIX_APP_KEY = 'c2bc7c3be5b5aefeea5e386530ea7194';
 
 export const searchFood = async (query: string) => {
   try {
